@@ -1,0 +1,14 @@
+BasedOnStyle: Chromium
+AccessModifierOffset: -4
+ConstructorInitializerIndentWidth: 2
+IndentWidth: 4
+NamespaceIndentation: Inner
+UseTab: ForIndentation
+TabWidth: 4
+AllowShortFunctionsOnASingleLine: false
+BreakBeforeBraces: Allman
+MaxEmptyLinesToKeep: 3
+KeepEmptyLinesAtTheStartOfBlocks: true
+ContinuationIndentWidth: 4
+SpacesBeforeTrailingComments: 1
+PenaltyBreakBeforeFirstCallParameter: 1000

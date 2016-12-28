@@ -1,2 +1,3 @@
 # char-rnn-java
-Simple RNN in Java.
+Single-layer RNN for predicting the next character in a sequence.
+Based on https://gist.github.com/karpathy/d4dee566867f8291f086
