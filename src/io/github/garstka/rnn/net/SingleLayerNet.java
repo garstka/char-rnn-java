@@ -1,6 +1,6 @@
-package pl.edu.agh.po.rnn.net;
+package io.github.garstka.rnn.net;
 
-import pl.edu.agh.po.rnn.TrainingSet;
+import io.github.garstka.rnn.TrainingSet;
 
 /*
  Single layer RNN.

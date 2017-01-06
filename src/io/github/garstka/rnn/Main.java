@@ -1,4 +1,4 @@
-package pl.edu.agh.po.rnn;
+package io.github.garstka.rnn;
 
 public class Main
 {
@@ -18,7 +18,7 @@ public class Main
 			return;
 		}
 
-		System.out.println("Data byte count: " + inputFile.dataSize() + ", vocabulary size: "
-		    + inputFile.vocabSize());
+		System.out.println("Data byte count: " + inputFile.dataSize()
+		    + ", vocabulary size: " + inputFile.vocabSize());
 	}
 }

@@ -1,4 +1,4 @@
-package pl.edu.agh.po.rnn;
+package io.github.garstka.rnn;
 
 public class TrainingSet
 {

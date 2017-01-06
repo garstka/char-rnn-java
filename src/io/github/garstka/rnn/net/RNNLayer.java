@@ -1,15 +1,14 @@
-package pl.edu.agh.po.rnn.net;
+package io.github.garstka.rnn.net;
 
-import pl.edu.agh.po.rnn.math.*;
-import pl.edu.agh.po.rnn.math.Math;
-
-import java.util.Vector;
+import io.github.garstka.rnn.math.Math;
+import io.github.garstka.rnn.math.Matrix;
 
 public class RNNLayer
 {
 	// Hyperparameters
 	private int hiddenCount; // Size of a single hidden layer of neurons.
-	private int sequenceLength; // Number of steps to unroll the RNN for backpropagation.
+	private int sequenceLength; // Number of steps to unroll the RNN for
+	// backpropagation.
 	private double learningRate; // Backpropagation parameter.
 
 	// Defaults
@@ -60,7 +59,8 @@ public class RNNLayer
 	// Initialize the net with random weights.
 	public void initialize(int vocabSize)
 	{
-		if (vocabSize < 0) throw new IllegalArgumentException();
+		if (vocabSize < 0)
+			throw new IllegalArgumentException();
 
 		this.inputSize = vocabSize;
 
@@ -95,15 +95,18 @@ public class RNNLayer
 			int toCheck[][] = {ix, iy};
 			for (int arr[] : toCheck)
 				for (int index : arr)
-					if (index < 0 || index >= inputSize) throw new IllegalArgumentException();
+					if (index < 0 || index >= inputSize)
+						throw new IllegalArgumentException();
 		}
 
 		/* Initialize forward pass */
 
-		Matrix xAt[] = new Matrix[sequenceLength + 1]; // one-hot input vectors through time
-		Matrix hAt[] = new Matrix[sequenceLength + 1]; // one-hot hidden state vectors through time
-		Matrix pAt[] =
-		    new Matrix[sequenceLength + 1]; // one-hot normalized probability vectors through time
+		Matrix xAt[] = new Matrix[sequenceLength
+		    + 1]; // one-hot input vectors through time
+		Matrix hAt[] = new Matrix[sequenceLength
+		    + 1]; // one-hot hidden state vectors through time
+		Matrix pAt[] = new Matrix[sequenceLength
+		    + 1]; // one-hot normalized probability vectors through time
 		Matrix yAtt = null; // one-hot unnormalized output probability (now)
 
 		hAt[0] = new Matrix(h); // copy the current state
@@ -120,7 +123,9 @@ public class RNNLayer
 			Matrix targetYAtt = Matrix.oneHot(inputSize, iy[t]);
 
 			// Find the new hidden state
-			hAt[t] = Matrix.tanh(Matrix.dot(Wxh, xAt[t]).add(Matrix.dot(Whh, hAt[t - 1])).add(bh));
+			hAt[t] = Matrix.tanh(Matrix.dot(Wxh, xAt[t])
+			                         .add(Matrix.dot(Whh, hAt[t - 1]))
+			                         .add(bh));
 
 			// Find unnormalized output probabilities.
 			yAtt = Matrix.dot(Why, hAt[t]).add(by);
@@ -146,7 +151,8 @@ public class RNNLayer
 
 		for (int t = sequenceLength; t >= 1; --t)
 		{
-			// backprop into y, http://cs231n.github.io/neural-networks-case-study/#grad
+			// backprop into y,
+			// http://cs231n.github.io/neural-networks-case-study/#grad
 			Matrix dy = new Matrix(pAt[t]);
 			dy.setAt(iy[t], (dy.at(iy[t]) - 1));
 
@@ -156,8 +162,9 @@ public class RNNLayer
 
 			// backprop into h and through tanh nonlinearity
 			Matrix dh = Matrix.dot(Why.T(), dy).add(dhNext);
-			Matrix dhRaw =
-			    Matrix.onesLike(hAt[t]).add(new Matrix(hAt[t]).mul(hAt[t]).neg()).mul(dh);
+			Matrix dhRaw = Matrix.onesLike(hAt[t])
+			                   .add(new Matrix(hAt[t]).mul(hAt[t]).neg())
+			                   .mul(dh);
 
 			// h updates
 			dWxh.add(Matrix.dot(dhRaw, xAt[t].T()));
@@ -173,7 +180,8 @@ public class RNNLayer
 		double clip_a = -5.0;
 		Matrix dparams[] = {dWxh, dWhh, dWhy, dbh, dby};
 
-		for (Matrix m : dparams) m.clip(clip_a, -clip_a);
+		for (Matrix m : dparams)
+			m.clip(clip_a, -clip_a);
 
 
 		/* Update weights with Adagrad */
@@ -185,8 +193,12 @@ public class RNNLayer
 		{
 			gparams[i].add(new Matrix(dparams[i]).mul(dparams[i]));
 
-			Matrix tmp = new Matrix(
-			    gparams[i]).apply((gparam) -> 1.0 / (java.lang.Math.sqrt(gparam) + 1e-8));
+			Matrix tmp =
+			    new Matrix(gparams[i])
+			        .apply(
+			            (gparam)
+			                -> (1.0 / (java.lang.Math.sqrt(gparam.doubleValue())
+			                              + 1e-8)));
 			params[i].add(new Matrix(dparams[i]).mul(-learningRate).mul(tmp));
 		}
 
@@ -208,7 +220,8 @@ public class RNNLayer
 	// If keep = true, advances the hidden state.
 	public int[] sample(int n, int seedIndex, boolean keep)
 	{
-		if (n < 1) throw new IllegalArgumentException();
+		if (n < 1)
+			throw new IllegalArgumentException();
 
 		int indices[] = new int[n];
 
@@ -222,7 +235,8 @@ public class RNNLayer
 
 		for (int i = 0; i < n; ++i)
 		{
-			h = Matrix.tanh(Matrix.dot(Wxh, xAtt).add(Matrix.dot(Whh, h)).add(bh));
+			h = Matrix.tanh(
+			    Matrix.dot(Wxh, xAtt).add(Matrix.dot(Whh, h)).add(bh));
 			Matrix y = Matrix.dot(Why, h).add(by);
 			Matrix p = Matrix.softmax(y);
 		}
