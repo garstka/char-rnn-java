@@ -2,6 +2,7 @@ package io.github.garstka.rnn.net;
 
 import io.github.garstka.rnn.math.Math;
 import io.github.garstka.rnn.math.Matrix;
+import io.github.garstka.rnn.math.Random;
 
 public class RNNLayer
 {
@@ -68,19 +69,19 @@ public class RNNLayer
 
 		double scale = 0.1;
 
-		Wxh = Math.randn(hiddenCount, vocabSize).mul(scale);
-		Whh = Math.randn(hiddenCount, hiddenCount).mul(scale);
-		Why = Math.randn(vocabSize, hiddenCount).mul(scale);
+		Wxh = Random.randn(hiddenCount, vocabSize).mul(scale);
+		Whh = Random.randn(hiddenCount, hiddenCount).mul(scale);
+		Why = Random.randn(vocabSize, hiddenCount).mul(scale);
 		bh = Matrix.zeros(hiddenCount);
 		by = Matrix.zeros(vocabSize);
 
-		Wxh = Matrix.zerosLike(gWxh);
-		Whh = Matrix.zerosLike(gWhh);
-		Why = Matrix.zerosLike(gWhy);
-		bh = Matrix.zerosLike(gbh);
-		by = Matrix.zerosLike(gby);
+		gWxh = Matrix.zerosLike(Wxh);
+		gWhh = Matrix.zerosLike(Whh);
+		gWhy = Matrix.zerosLike(Why);
+		gbh = Matrix.zerosLike(bh);
+		gby = Matrix.zerosLike(by);
 
-		h = Math.randn(hiddenCount);
+		h = Random.randn(hiddenCount);
 	}
 
 	// Train: x's -> y's. Returns the cross-entropy loss.
@@ -88,7 +89,7 @@ public class RNNLayer
 	// y - indices of outputs through time, starting from t=1
 	public double train(int ix[], int iy[])
 	{
-		if (ix.length != iy.length || ix.length != sequenceLength)
+		if (ix.length != iy.length || ix.length != sequenceLength + 1)
 			throw new IllegalArgumentException();
 
 		{
@@ -107,7 +108,7 @@ public class RNNLayer
 		    + 1]; // one-hot hidden state vectors through time
 		Matrix pAt[] = new Matrix[sequenceLength
 		    + 1]; // one-hot normalized probability vectors through time
-		Matrix yAtt = null; // one-hot unnormalized output probability (now)
+		Matrix yAtt; // one-hot unnormalized output probability (now)
 
 		hAt[0] = new Matrix(h); // copy the current state
 
@@ -123,15 +124,16 @@ public class RNNLayer
 			Matrix targetYAtt = Matrix.oneHot(inputSize, iy[t]);
 
 			// Find the new hidden state
-			hAt[t] = Matrix.tanh(Matrix.dot(Wxh, xAt[t])
-			                         .add(Matrix.dot(Whh, hAt[t - 1]))
-			                         .add(bh));
+			hAt[t] = (Matrix.dot(Wxh, xAt[t])
+			              .add(Matrix.dot(Whh, hAt[t - 1]))
+			              .add(bh))
+			             .tanh();
 
 			// Find unnormalized output probabilities.
 			yAtt = Matrix.dot(Why, hAt[t]).add(by);
 
 			// Normalize output probabilities
-			pAt[t] = Matrix.softmax(yAtt);
+			pAt[t] = Math.softmax(yAtt);
 
 			// Calulate cross-entropy loss
 			loss += -java.lang.Math.log(pAt[t].at(targetYAtt));
@@ -223,7 +225,7 @@ public class RNNLayer
 		if (n < 1)
 			throw new IllegalArgumentException();
 
-		int indices[] = new int[n];
+		int[] indices = new int[n];
 
 		Matrix h;
 		if (keep)
@@ -235,11 +237,24 @@ public class RNNLayer
 
 		for (int i = 0; i < n; ++i)
 		{
-			h = Matrix.tanh(
-			    Matrix.dot(Wxh, xAtt).add(Matrix.dot(Whh, h)).add(bh));
+			// calculate the next hidden state
+			h = (Matrix.dot(Wxh, xAtt).add(Matrix.dot(Whh, h)).add(bh)).tanh();
+
+			// calculate output
 			Matrix y = Matrix.dot(Why, h).add(by);
-			Matrix p = Matrix.softmax(y);
+
+			// calculate probabilities
+			Matrix p = Math.softmax(y);
+
+			// choose one of the outputs based on the probabilities
+			int ix = Random.randomChoice(p.unravel());
+			indices[i] = ix;
+
+			// use the chosen index as the new input
+			xAtt = Matrix.oneHot(inputSize, ix);
 		}
+
+		return indices;
 	}
 
 

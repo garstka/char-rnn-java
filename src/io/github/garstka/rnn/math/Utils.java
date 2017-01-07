@@ -2,8 +2,11 @@ package io.github.garstka.rnn.math;
 
 import java.util.Arrays;
 
+// Utility helper funtions.
 public class Utils
 {
+	/* Utilities for 2D arrays. */
+
 	// Performs a deep copy of a 2D array of doubles.
 	static public double[][] deepCopyOf(double[][] src)
 	{
