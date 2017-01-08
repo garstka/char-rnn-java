@@ -104,14 +104,10 @@ public class SingleLayerNet
 				// train
 				double loss = layer.train(ix, iy);
 
-				// print debug
+				// calculate smooth loss
 
-				if (printDebug)
-				{
-					smoothLoss = smoothLoss * 0.999 + loss * 0.001;
-					System.out.println(
-					    "Step: " + totalSteps + ", loss: " + smoothLoss);
-				}
+				smoothLoss = smoothLoss * 0.999 + loss * 0.001;
+
 				dataTrainedIndex = upperBound - 1; // shift the trained boundary
 
 				totalSteps++;
@@ -121,6 +117,14 @@ public class SingleLayerNet
 		{
 			// Shouldn't happen.
 			throw new RuntimeException("Unexpected state of alphabet.");
+		}
+
+		// print debug
+
+		if (printDebug)
+		{
+			System.out.println(
+					"Step: " + totalSteps + ", loss: " + smoothLoss);
 		}
 	}
 
@@ -139,7 +143,7 @@ public class SingleLayerNet
 		char[] sampled = new char[sampledIndices.length];
 
 		for (int i = 0; i < sampledIndices.length; i++)
-			sampled[i] = alphabet.indexToChar(sampled[i]);
+			sampled[i] = alphabet.indexToChar(sampledIndices[i]);
 
 		return new String(sampled);
 	}

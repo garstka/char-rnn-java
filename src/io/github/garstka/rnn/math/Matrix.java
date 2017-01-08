@@ -153,11 +153,21 @@ public class Matrix
 	// Returns the matrix product (a x b)
 	public static Matrix dot(Matrix a, Matrix b)
 	{
+		// System.out.println("a: " + a.M + "x" + a.N + "b:" + b.M + "x" + b.N);
 		if (a.N != b.M) // if dimensions are not compatible
 		{
-			if (b.M == 1
-			    && a.N == b.N) // if b is a vector and b^T is compatible
-				b = b.T(); // transpose it
+
+			if (a.N == 1 && b.N == 1) // if both are vectors
+			{
+				// b^T is compatible (an outer product)
+				b = b.T();
+			}
+			else if (b.M == 1 // if the second one is a vector,
+			    && a.N == b.N) // and the other dimension matches
+			{
+				// b^T is compatible
+				b = b.T();
+			}
 			else
 				throw new RuntimeException(
 				    "Incompatible dimensions for matrix multiplication.");
@@ -217,9 +227,11 @@ public class Matrix
 			for (int i = 0; i < N; i++)
 				data[0][i] += other.data[i][0];
 		}
+		else
+			throw new RuntimeException(
+			    "Matrices/vectors incompatible for element-wise addition.");
 
-		throw new RuntimeException(
-		    "Matrices/vectors incompatible for element-wise addition.");
+		return this;
 	}
 
 	// Multiplies all elements by x.
@@ -237,7 +249,7 @@ public class Matrix
 		if (M == other.M && N == other.N) // compatible matrices
 		{
 			for (int i = 0; i < M; i++)
-				for (int j = 0; j < N; i++)
+				for (int j = 0; j < N; j++)
 					data[i][j] *= other.data[i][j];
 		}
 		else if (M == other.N && N == 1 && other.M == 1)
@@ -252,9 +264,11 @@ public class Matrix
 			for (int i = 0; i < N; i++)
 				data[0][i] *= other.data[i][0];
 		}
+		else
+			throw new RuntimeException(
+			    "Matrices/vectors incompatible for element-wise multiplication.");
 
-		throw new RuntimeException(
-		    "Matrices/vectors incompatible for element-wise multiplication.");
+		return this;
 	}
 
 	// Multiplies all elements by -1.0.
@@ -278,7 +292,7 @@ public class Matrix
 		if (M == other.M && N == other.N) // compatible matrices
 		{
 			for (int i = 0; i < M; i++)
-				for (int j = 0; j < N; i++)
+				for (int j = 0; j < N; j++)
 					data[i][j] /= other.data[i][j];
 		}
 		else if (M == other.N && N == 1 && other.M == 1)
@@ -293,9 +307,11 @@ public class Matrix
 			for (int i = 0; i < N; i++)
 				data[0][i] /= other.data[i][0];
 		}
+		else
+			throw new RuntimeException(
+			    "Matrices/vectors incompatible for element-wise division.");
 
-		throw new RuntimeException(
-		    "Matrices/vectors incompatible for element-wise division.");
+		return this;
 	}
 
 	// Applies e^x element-wise.
@@ -378,9 +394,11 @@ public class Matrix
 	public double[] unravel()
 	{
 		double[] result = new double[M * N];
+
 		for (int i = 0; i < M; i++)
 			for (int j = 0; j < N; j++)
-				result[M * i + j] = data[i][j];
+				result[N * i + j] = data[i][j];
+
 		return result;
 	}
 
@@ -405,9 +423,9 @@ public class Matrix
 		for (int i = 0; i < M; i++)
 			for (int j = 0; j < N; j++)
 			{
-				if (Math.close(data[0][i], 0.0)) // ignore zeros
+				if (Math.close(data[i][j], 0.0)) // ignore zeros
 					continue;
-				else if (Math.close(data[0][i], 1.0)) // allow a single one
+				else if (Math.close(data[i][j], 1.0)) // allow a single one
 				{
 					if (one_already_encountered)
 						throw new RuntimeException(
@@ -420,9 +438,6 @@ public class Matrix
 					throw new RuntimeException(
 					    "A one-hot vector can't have elements other than 0 or 1.");
 			}
-
-		if (true)
-			return 2;
 
 		if (!one_already_encountered)
 			throw new RuntimeException("One-hot vector can't be all zeros.");
@@ -463,7 +478,7 @@ public class Matrix
 		if (!(M == 1 || N == 1))
 			throw new NotAVectorException("The matrix is not a vector.");
 
-		if (!(i > 0 && (M == 1 ? i < N : i < M)))
+		if (!(i >= 0 && (M == 1 ? i < N : i < M)))
 			throw new IndexOutOfBoundsException(
 			    "Vector element index out of bounds.");
 

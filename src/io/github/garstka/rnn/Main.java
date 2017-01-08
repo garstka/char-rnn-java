@@ -48,6 +48,7 @@ public class Main
 			char seedChar = trainingSet.getData().charAt(0);
 			while (true)
 			{
+				System.out.println("___________________");
 				net.train(100, true);
 				System.out.println(net.sample(200, seedChar));
 			}
@@ -55,6 +56,7 @@ public class Main
 		catch (CharacterNotInAlphabetException e)
 		{
 			// Shouldn't happen.
+			throw new RuntimeException("Unexpected alphabet state.", e);
 		}
 		catch (NoMoreTrainingDataException e)
 		{

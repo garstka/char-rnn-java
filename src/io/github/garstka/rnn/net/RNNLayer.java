@@ -4,6 +4,8 @@ import io.github.garstka.rnn.math.Math;
 import io.github.garstka.rnn.math.Matrix;
 import io.github.garstka.rnn.math.Random;
 
+import java.util.Arrays;
+
 public class RNNLayer
 {
 	// Hyperparameters
@@ -193,15 +195,14 @@ public class RNNLayer
 
 		for (int i = 0; i < dparams.length; ++i)
 		{
-			gparams[i].add(new Matrix(dparams[i]).mul(dparams[i]));
+			Matrix param = params[i];
+			Matrix dparam = dparams[i];
+			Matrix gparam = gparams[i];
 
-			Matrix tmp =
-			    new Matrix(gparams[i])
-			        .apply(
-			            (gparam)
-			                -> (1.0 / (java.lang.Math.sqrt(gparam.doubleValue())
-			                              + 1e-8)));
-			params[i].add(new Matrix(dparams[i]).mul(-learningRate).mul(tmp));
+			gparam.add(new Matrix(dparam).mul(dparam));
+			Matrix tmp = new Matrix(gparam).apply(
+			    (elem) -> java.lang.Math.sqrt(elem) + 1e-8);
+			param.add(new Matrix(dparam).mul(-learningRate).div(tmp));
 		}
 
 		/* Update hidden state */
@@ -256,8 +257,6 @@ public class RNNLayer
 
 		return indices;
 	}
-
-
 
 	public int getSequenceLength()
 	{
