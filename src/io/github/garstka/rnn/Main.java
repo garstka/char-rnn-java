@@ -1,10 +1,7 @@
 package io.github.garstka.rnn;
 
-import io.github.garstka.rnn.net.BadTrainingSetException;
-import io.github.garstka.rnn.net.NoMoreTrainingDataException;
-import io.github.garstka.rnn.net.SingleLayerNet;
+import io.github.garstka.rnn.net.*;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class Main
@@ -15,10 +12,10 @@ public class Main
 		// Load the training set.
 
 		String inputFile = "input.txt";
-		TrainingSet trainingSet;
+		StringTrainingSet trainingSet;
 		try
 		{
-			trainingSet = TrainingSet.fromFile(inputFile);
+			trainingSet = StringTrainingSet.fromFile(inputFile);
 		}
 		catch (IOException e)
 		{
@@ -31,8 +28,8 @@ public class Main
 
 		// Initialize the network.
 
-		SingleLayerNet net = new SingleLayerNet();
-
+		SingleLayerCharLevelRNN net = new SingleLayerCharLevelRNN();
+		net.printDebug(true);
 		try
 		{
 			net.initialize(trainingSet);
@@ -49,8 +46,8 @@ public class Main
 			while (true)
 			{
 				System.out.println("___________________");
-				net.train(100, true);
-				System.out.println(net.sample(200, seedChar));
+				net.train(100);
+				System.out.println(net.sampleString(200, seedChar,false));
 			}
 		}
 		catch (CharacterNotInAlphabetException e)

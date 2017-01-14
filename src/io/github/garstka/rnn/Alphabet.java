@@ -70,4 +70,32 @@ public class Alphabet
 			    "Index does not correspond to a character.");
 		return indexToChar[index];
 	}
+
+	// Converts all indices to chars using indexToChar.
+	public char[] indicesToChars(int[] indices)
+	{
+		if (indices == null)
+			throw new NullPointerException("Indices can't be null.");
+
+		char[] out = new char[indices.length];
+
+		for (int i = 0; i < indices.length; i++)
+			out[i] = indexToChar(indices[i]);
+
+		return out;
+	}
+
+	// Converts the string to indices using charToIndex.
+	public int[] charsToIndices(String chars)
+	{
+		if (chars == null)
+			throw new NullPointerException("Array can't be null.");
+
+		int[] out = new int[chars.length()];
+
+		for (int i = 0; i < chars.length(); i++)
+			out[i] = indexToChar(chars.charAt(i));
+
+		return out;
+	}
 }
