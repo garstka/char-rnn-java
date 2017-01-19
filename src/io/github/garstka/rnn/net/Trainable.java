@@ -3,12 +3,13 @@ package io.github.garstka.rnn.net;
 // Trainable neural network.
 public interface Trainable {
 
-	// Trains the network until there's no more data.
-	void train() throws NoMoreTrainingDataException;
+	/*
+		Performs a forward-backward pass for the given indices.
 
-	// Trains the network for some steps.
-	void train(int steps) throws NoMoreTrainingDataException;
+		ix.length and iy.length lengths must match.
+		All indices must be less than the vocabulary size.
 
-	// Returns the smooth cross-entropy loss.
-	double getSmoothLoss();
+		Returns the cross-entropy loss.
+	*/
+	double forwardBackward(int[] ix, int[] iy);
 }

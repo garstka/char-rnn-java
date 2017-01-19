@@ -77,8 +77,7 @@ public class RNNLayer
 	// Set the input size.
 	public void setInputSize(int inputSize)
 	{
-		if (initialized)
-			initialized = false;
+		initialized = false;
 
 		if (inputSize <= 0)
 			throw new IllegalArgumentException("Illegal input size.");
@@ -89,8 +88,7 @@ public class RNNLayer
 	// Set the hidden size.
 	public void setHiddenSize(int hiddenSize)
 	{
-		if (initialized)
-			initialized = false;
+		initialized = false;
 
 		if (hiddenSize <= 0)
 			throw new IllegalArgumentException("Illegal hidden size.");
@@ -101,8 +99,7 @@ public class RNNLayer
 	// Set the output size.
 	public void setOutputSize(int outputSize)
 	{
-		if (initialized)
-			initialized = false;
+		initialized = false;
 
 		if (outputSize <= 0)
 			throw new IllegalArgumentException("Illegal output size.");
@@ -112,9 +109,6 @@ public class RNNLayer
 
 	public void setLearningRate(double learningRate)
 	{
-		if (initialized)
-			initialized = false;
-
 		this.learningRate = learningRate;
 	}
 

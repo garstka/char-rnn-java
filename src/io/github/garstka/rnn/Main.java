@@ -9,46 +9,38 @@ public class Main
 
 	public static void main(String[] args)
 	{
-		// Load the training set.
-
-		String inputFile = "input.txt";
-		StringTrainingSet trainingSet;
 		try
 		{
-			trainingSet = StringTrainingSet.fromFile(inputFile);
-		}
-		catch (IOException e)
-		{
-			System.out.println("Couldn't open the file.");
-			return;
-		}
+			// Load the training set.
 
-		System.out.println("Data size: " + trainingSet.getData().length()
-		    + ", vocabulary size: " + trainingSet.getAlphabet().size());
+			String inputFile = "input.txt";
 
-		// Initialize the network.
+			StringTrainingSet trainingSet = StringTrainingSet.fromFile(inputFile);
 
-		SingleLayerCharLevelRNN net = new SingleLayerCharLevelRNN();
-		net.printDebug(true);
-		try
-		{
-			net.initialize(trainingSet);
-		}
-		catch (BadTrainingSetException e)
-		{
-			System.out.println("Bad training set.");
-			return;
-		}
+			System.out.println("Data size: " + trainingSet.size()
+					+ ", vocabulary size: " + trainingSet.vocabularySize());
 
-		try
-		{
+			// Initialize the network and its trainer.
+
+			SingleLayerCharLevelRNN net = new SingleLayerCharLevelRNN(trainingSet.getAlphabet());
+			RNNTrainer trainer = new RNNTrainer(net,trainingSet);
+			trainer.printDebug(true);
+
 			char seedChar = trainingSet.getData().charAt(0);
 			while (true)
 			{
 				System.out.println("___________________");
-				net.train(100);
+				trainer.train(100);
 				System.out.println(net.sampleString(200, seedChar,false));
 			}
+		}
+		catch (IOException e)
+		{
+			System.out.println("Couldn't open the file.");
+		}
+		catch (BadTrainingSetException e)
+		{
+			System.out.println("Bad training set.");
 		}
 		catch (CharacterNotInAlphabetException e)
 		{

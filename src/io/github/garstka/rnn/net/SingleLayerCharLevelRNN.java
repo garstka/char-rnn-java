@@ -9,29 +9,34 @@ import io.github.garstka.rnn.CharacterNotInAlphabetException;
 public class SingleLayerCharLevelRNN
     extends SingleLayerRNN implements CharacterSampleable
 {
-	// Defaults
+	protected Alphabet alphabet; // The alphabet for sampling.
 
-	public static final int defaultSequenceLength = 50;
+	/*** Construct ***/
 
-	// Creates a net with default parameters.
-	public SingleLayerCharLevelRNN()
+	// Constructs and initializes. alphabet != null.
+	public  SingleLayerCharLevelRNN(Alphabet alphabet)
 	{
-		super(defaultSequenceLength);
+		initialize(alphabet);
 	}
 
-	// Creates a net with custom parameters.
-	public SingleLayerCharLevelRNN(
-	    int hiddenCount, int sequenceLength, double learningRate)
+	/*** Initialize ***/
+
+	// Initializes the net. alphabet != null.
+	public void initialize(Alphabet alphabet)
 	{
-		super(hiddenCount, sequenceLength, learningRate);
+		if(alphabet == null)
+			throw new NullPointerException("Alphabet can't be null.");
+
+		this.alphabet = alphabet;
+		super.initialize(alphabet.size());
 	}
 
-	// Initializes the net for training. Requires trainingSet != null.
-	public void initialize(StringTrainingSet trainingSet)
-	    throws BadTrainingSetException
+	public void initialize(int vocabularySize)
 	{
-		super.initialize(trainingSet);
+		throw new RuntimeException();
 	}
+
+	/*** Sample ***/
 
 	// Samples length indices, single seed, advance the state.
 	// Throws, if seed is not part of the alphabet.
@@ -52,9 +57,7 @@ public class SingleLayerCharLevelRNN
 		if (length < 0)
 			throw new IllegalArgumentException("Non-negative length expected.");
 
-		Alphabet alphabet = ((StringTrainingSet) trainingSet).getAlphabet();
 		int seedIndex = alphabet.charToIndex(seed);
-
 
 		int[] sampledIndices = this.sampleIndices(length, seedIndex, advance);
 		char[] sampledChars = alphabet.indicesToChars(sampledIndices);
@@ -84,7 +87,6 @@ public class SingleLayerCharLevelRNN
 		if (seed == null)
 			throw new NullPointerException("Non-null seed expected.");
 
-		Alphabet alphabet = ((StringTrainingSet) trainingSet).getAlphabet();
 		int[] seedIndices = alphabet.charsToIndices(seed);
 
 		int[] sampledIndices = this.sampleIndices(length, seedIndices, advance);
