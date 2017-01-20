@@ -1,5 +1,10 @@
 package io.github.garstka.rnn.net;
 
+import io.github.garstka.rnn.net.exceptions.BadTrainingSetException;
+import io.github.garstka.rnn.net.exceptions.NoMoreTrainingDataException;
+import io.github.garstka.rnn.net.interfaces.Trainable;
+import io.github.garstka.rnn.net.interfaces.TrainingSet;
+
 // Trains a recurrent neural net on a training set.
 public class RNNTrainer
 {

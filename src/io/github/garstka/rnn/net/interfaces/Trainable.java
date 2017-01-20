@@ -1,4 +1,4 @@
-package io.github.garstka.rnn.net;
+package io.github.garstka.rnn.net.interfaces;
 
 // Trainable neural network.
 public interface Trainable {

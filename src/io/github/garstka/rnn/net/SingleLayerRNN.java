@@ -20,10 +20,16 @@ public class SingleLayerRNN extends RNN
 		layer = new RNNLayer();
 	}
 
+	// Creates a net with default parameters and initializes immediately.
+	public SingleLayerRNN(int vocabularySize)
+	{
+		this();
+		initialize(vocabularySize);
+	}
+
 	/*** Hyperparameters ***/
 
-	// Sets the hidden layer size. Network must be initialized before changes
-	// take effect.
+	// Sets the hidden layer size. Network must be initialized again.
 	public void setHiddenSize(int hiddenSize)
 	{
 		if (hiddenSize < 1)
@@ -41,7 +47,8 @@ public class SingleLayerRNN extends RNN
 
 	/*** Initialize ***/
 
-	// Initializes the net for this vocabulary size. Requires vocabularySize > 0.
+	// Initializes the net for this vocabulary size. Requires vocabularySize >
+	// 0.
 	public void initialize(int vocabularySize)
 	{
 		if (vocabularySize < 1)
@@ -147,5 +154,19 @@ public class SingleLayerRNN extends RNN
 		// int[] sampled = layer.sample(n,seed[0]);
 
 		return sampled;
+	}
+
+	// Returns true if the net was initialized.
+	public boolean isInitialized()
+	{
+		return initialized;
+	}
+
+	// Returns the vocabulary size - max index + 1.
+	public int getVocabularySize()
+	{
+		if (!initialized)
+			throw new IllegalStateException("Network is uninitialized.");
+		return layer.getInputSize();
 	}
 }

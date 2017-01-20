@@ -1,5 +1,7 @@
 package io.github.garstka.rnn.math;
 
+import io.github.garstka.rnn.math.exceptions.NotRectangularArrayException;
+
 import java.util.Arrays;
 
 // Utility helper funtions.

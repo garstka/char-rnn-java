@@ -201,7 +201,7 @@ public class RNNLayer
 	void forward(Matrix x[])
 	{
 		if (!initialized)
-			throw new IllegalStateException("Network was not initialized.");
+			throw new IllegalStateException("Layer was not initialized.");
 
 		if (x == null || x.length < 2) // starting at t = 1
 			throw new IllegalArgumentException(
@@ -425,7 +425,7 @@ public class RNNLayer
 			dhNext = Matrix.dot(Whh.T(), dhRaw);
 
 			// multi-layer only - save dx
-			dxAt[t] = Matrix.dot(Wxh.T(), dhRaw);
+			dxAt[t] = Matrix.dot(Wxh.T(), dh);
 		}
 
 		// clip exploding gradients

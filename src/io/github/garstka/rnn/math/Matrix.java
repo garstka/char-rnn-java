@@ -1,5 +1,8 @@
 package io.github.garstka.rnn.math;
 
+import io.github.garstka.rnn.math.exceptions.NotAVectorException;
+import io.github.garstka.rnn.math.exceptions.NotRectangularArrayException;
+
 import java.util.function.UnaryOperator;
 
 // MxN Matrix

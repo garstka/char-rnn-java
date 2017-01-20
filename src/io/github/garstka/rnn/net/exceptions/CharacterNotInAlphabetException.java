@@ -1,4 +1,4 @@
-package io.github.garstka.rnn;
+package io.github.garstka.rnn.net.exceptions;
 
 public class CharacterNotInAlphabetException extends Exception
 {

@@ -1,21 +1,22 @@
 package io.github.garstka.rnn.net;
 
 // Single layer character level RNN.
-public class SingleLayerCharLevelRNN extends CharLevelRNN
+public class MultiLayerCharLevelRNN extends CharLevelRNN
 {
 	protected Alphabet alphabet; // The alphabet for sampling.
 
-	protected SingleLayerRNN internal; // Basic network.
+	protected MultiLayerRNN internal; // Basic network.
 
 	/*** Construct ***/
 
 	// Constructs without initialization.
-	public SingleLayerCharLevelRNN()
+	public MultiLayerCharLevelRNN()
 	{
-		internal = new SingleLayerRNN();
+		internal = new MultiLayerRNN();
 	}
+
 	// Constructs and initializes immediately. Requires that alphabet != null.
-	public SingleLayerCharLevelRNN(Alphabet alphabet)
+	public MultiLayerCharLevelRNN(Alphabet alphabet)
 	{
 		this();
 		initialize(alphabet);
@@ -24,7 +25,7 @@ public class SingleLayerCharLevelRNN extends CharLevelRNN
 	/*** Hyperparameters ***/
 
 	// Sets the hidden layer size. Network must be initialized again.
-	public void setHiddenSize(int hiddenSize)
+	public void setHiddenSize(int[] hiddenSize)
 	{
 		internal.setHiddenSize(hiddenSize);
 	}

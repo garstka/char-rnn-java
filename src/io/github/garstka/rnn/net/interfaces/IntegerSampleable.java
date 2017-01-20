@@ -1,4 +1,4 @@
-package io.github.garstka.rnn.net;
+package io.github.garstka.rnn.net.interfaces;
 
 // Network that can be sampled for a sequence of integers.
 public interface IntegerSampleable {

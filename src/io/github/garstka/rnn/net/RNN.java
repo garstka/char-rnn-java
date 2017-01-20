@@ -1,8 +1,16 @@
 package io.github.garstka.rnn.net;
 
+import io.github.garstka.rnn.net.interfaces.IntegerSampleable;
+import io.github.garstka.rnn.net.interfaces.Trainable;
+
 // A recurrent neural network.
 public abstract class RNN implements IntegerSampleable, Trainable
 {
-    // Initializes the net for this vocabulary size. Requires vocabularySize > 0.
-    abstract public void initialize(int vocabularySize);
+	/*** Get ***/
+
+	// Returns true if the net was initialized.
+	public abstract boolean isInitialized();
+
+	// Returns the vocabulary size (max index + 1), if initialized.
+	public abstract int getVocabularySize();
 }

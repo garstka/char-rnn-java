@@ -1,4 +1,4 @@
-package io.github.garstka.rnn.net;
+package io.github.garstka.rnn.net.exceptions;
 
 // Exception thrown when the training set is too small.
 public class BadTrainingSetException extends Exception

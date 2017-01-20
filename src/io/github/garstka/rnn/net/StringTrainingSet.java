@@ -1,7 +1,8 @@
 package io.github.garstka.rnn.net;
 
-import io.github.garstka.rnn.Alphabet;
-import io.github.garstka.rnn.CharacterNotInAlphabetException;
+import io.github.garstka.rnn.net.exceptions.CharacterNotInAlphabetException;
+import io.github.garstka.rnn.net.exceptions.NoMoreTrainingDataException;
+import io.github.garstka.rnn.net.interfaces.TrainingSet;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

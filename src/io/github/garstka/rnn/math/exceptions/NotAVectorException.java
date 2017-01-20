@@ -1,4 +1,4 @@
-package io.github.garstka.rnn.math;
+package io.github.garstka.rnn.math.exceptions;
 
 public class NotAVectorException extends RuntimeException
 {

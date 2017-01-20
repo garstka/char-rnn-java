@@ -1,5 +1,7 @@
-package io.github.garstka.rnn.net;
+package io.github.garstka.rnn.net.interfaces;
 
+
+import io.github.garstka.rnn.net.exceptions.NoMoreTrainingDataException;
 
 // Training set for sequences.
 public interface TrainingSet {
