@@ -89,6 +89,7 @@ public class Alphabet
 
 	// Converts the string to indices using charToIndex.
 	public int[] charsToIndices(String chars)
+	    throws CharacterNotInAlphabetException
 	{
 		if (chars == null)
 			throw new NullPointerException("Array can't be null.");
@@ -96,7 +97,7 @@ public class Alphabet
 		int[] out = new int[chars.length()];
 
 		for (int i = 0; i < chars.length(); i++)
-			out[i] = indexToChar(chars.charAt(i));
+			out[i] = charToIndex(chars.charAt(i));
 
 		return out;
 	}

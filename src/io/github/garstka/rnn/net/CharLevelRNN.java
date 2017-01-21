@@ -18,45 +18,14 @@ public abstract class CharLevelRNN extends RNN implements CharacterSampleable
 
 	/*** Sample ***/
 
-	// Samples length characters, single seed, advance the state.
-	// Throws, if seed is not part of the alphabet.
-	public String sampleString(int length, char seed)
+	public String sampleString(int length, String seed, double temp)
 	    throws CharacterNotInAlphabetException
 	{
-		return sampleString(length, seed, true);
+		return sampleString(length, seed, temp, true);
 	}
 
-	// Samples length characters, single seed, choose whether to advance the
-	// state. Throws, if seed is not part of the alphabet.
-	public String sampleString(int length, char seed, boolean advance)
-	    throws CharacterNotInAlphabetException
-	{
-		if (!isInitialized())
-			throw new IllegalStateException("Network is uninitialized.");
-
-		if (length < 0)
-			throw new IllegalArgumentException("Non-negative length expected.");
-
-		int seedIndex = getAlphabet().charToIndex(seed);
-
-		int[] sampledIndices = sampleIndices(length, seedIndex, advance);
-		char[] sampledChars = getAlphabet().indicesToChars(sampledIndices);
-
-		return new String(sampledChars);
-	}
-
-	// Samples n characters, sequence seed, advance the state.
-	// Throws, if any character in seed is not part of the alphabet.
-	public String sampleString(int length, String seed)
-	    throws CharacterNotInAlphabetException
-	{
-		return sampleString(length, seed, true);
-	}
-
-	// Samples n characters, sequence seed, choose whether to advance the state.
-	// Throws, if any character in seed is not part of the alphabet.
-	public String sampleString(int length, String seed, boolean advance)
-	    throws CharacterNotInAlphabetException
+	public String sampleString(int length, String seed, double temp,
+	    boolean advance) throws CharacterNotInAlphabetException
 	{
 		if (!isInitialized())
 			throw new IllegalStateException("Network uninitialized.");
@@ -67,9 +36,13 @@ public abstract class CharLevelRNN extends RNN implements CharacterSampleable
 		if (seed == null)
 			throw new NullPointerException("Non-null seed expected.");
 
+		if (seed.length() == 0)
+			throw new NullPointerException("Non-empty seed expected.");
+
 		int[] seedIndices = getAlphabet().charsToIndices(seed);
 
-		int[] sampledIndices = sampleIndices(length, seedIndices, advance);
+		int[] sampledIndices =
+		    sampleIndices(length, seedIndices, temp, advance);
 		char[] sampledChars = getAlphabet().indicesToChars(sampledIndices);
 
 		return new String(sampledChars);

@@ -2,6 +2,7 @@ package io.github.garstka.rnn.net;
 
 import io.github.garstka.rnn.math.Matrix;
 import io.github.garstka.rnn.math.Random;
+import io.github.garstka.rnn.math.Math;
 
 // Multi layer RNN.
 public class MultiLayerRNN extends RNN
@@ -101,7 +102,7 @@ public class MultiLayerRNN extends RNN
 			if (i == layer.length - 1)
 				layer[i].setOutputSize(vocabularySize);
 			else
-				layer[i].setOutputSize(hiddenSize[i + 1]);
+				layer[i].setOutputSize(hiddenSize[i]);
 
 			layer[i].initialize();
 		}
@@ -155,26 +156,12 @@ public class MultiLayerRNN extends RNN
 
 	/*** Sample ***/
 
-	// Samples n indices, single seed, advance the state.
-	public int[] sampleIndices(int n, int seed)
+	public int[] sampleIndices(int n, int[] seed, double temp)
 	{
-		return sampleIndices(n, seed, true);
+		return sampleIndices(n, seed, temp, true);
 	}
 
-	// Samples n indices, single seed, choose whether to advance the state.
-	public int[] sampleIndices(int n, int seed, boolean advance)
-	{
-		return sampleIndices(n, new int[] {seed}, advance);
-	}
-
-	// Samples n indices, sequence seed, advance the state.
-	public int[] sampleIndices(int n, int[] seed)
-	{
-		return sampleIndices(n, seed, true);
-	}
-
-	// Samples n indices, sequence seed, choose whether to advance the state.
-	public int[] sampleIndices(int n, int[] seed, boolean advance)
+	public int[] sampleIndices(int n, int[] seed, double temp, boolean advance)
 	{
 		if (!initialized)
 			throw new IllegalStateException("Network is uninitialized.");
@@ -185,8 +172,8 @@ public class MultiLayerRNN extends RNN
 		if (seed == null)
 			throw new NullPointerException("Non-null seed expected.");
 
-		if (n < 0)
-			throw new IllegalArgumentException("Non-negative length expected.");
+		if (seed.length == 0)
+			throw new IllegalArgumentException("Non-empty seed expected.");
 
 		Matrix[] savedState = null;
 
@@ -204,8 +191,9 @@ public class MultiLayerRNN extends RNN
 		for (int i = 1; i < layer.length; i++)
 			layer[i].forward(layer[i - 1].gety());
 
-		sampled[0] = Random.randomChoice(layer[layer.length
-		    - 1].getp()[1].unravel()); // first choice given seed
+		// first choice given seed, use the temperature
+		sampled[0] =
+		    Random.randomChoice(layer[layer.length - 1].getProbabilities(temp));
 
 		// Sample.
 
@@ -216,8 +204,9 @@ public class MultiLayerRNN extends RNN
 			for (int i = 1; i < layer.length; i++)
 				layer[i].forward(layer[i - 1].gety());
 
+			// choose next, use the temperature
 			sampled[t] = Random.randomChoice(
-			    layer[layer.length - 1].getp()[1].unravel());
+			    layer[layer.length - 1].getProbabilities(temp));
 			seedVec = layer[0].ixTox(sampled[t]);
 		}
 

@@ -4,6 +4,8 @@ import io.github.garstka.rnn.math.Math;
 import io.github.garstka.rnn.math.Matrix;
 import io.github.garstka.rnn.math.Random;
 
+import java.util.Arrays;
+
 // An RNN Layer with support for mult-layer networks.
 public class RNNLayer
 {
@@ -372,6 +374,8 @@ public class RNNLayer
 	*/
 	void backward(Matrix dy[])
 	{
+		// System.out.println("LAYER");
+		// System.out.println("" + dy[1].getk());
 		if (!initialized)
 			throw new IllegalStateException("Network was not initialized.");
 
@@ -425,7 +429,21 @@ public class RNNLayer
 			dhNext = Matrix.dot(Whh.T(), dhRaw);
 
 			// multi-layer only - save dx
+			if (t == 5)
+			{
+				// dxAt[t] = Matrix.dot(Wxh.T(), dhRaw);
+				// System.out.println("dhRaw: " +
+				// Arrays.toString(dxAt[t].unravel()));
+				// dxAt[t] = Matrix.dot(Wxh.T(), dh);
+				// System.out.println("dh: " +
+				// Arrays.toString(dxAt[t].unravel()));
+			}
 			dxAt[t] = Matrix.dot(Wxh.T(), dh);
+			// System.out.println("dh: " + dh.getM() + " " + dh.getN());
+			// System.out.println("dhRaw: " + dhRaw.getM() + " " +
+			// dhRaw.getN());
+			// System.out.println("dxAt[t]: " + dxAt[t].getM() + " " +
+			// dxAt[t].getN());
 		}
 
 		// clip exploding gradients
@@ -470,54 +488,18 @@ public class RNNLayer
 		return dxAt;
 	}
 
-	// Samples n indices using only the single layer, and a single seed index.
-	// Doesn't advance the hidden state.
-	public int[] sample(int n, int seedIndex)
-	{
-		return sample(n, seedIndex, false);
-	}
+	/*** Sampling ***/
 
-	// Samples n indices using only the single layer, and a single seed index.
-	// seedIndex is the previous index in the sequence.
-	// If keep = true, advances the hidden state.
-	public int[] sample(int n, int seedIndex, boolean keep)
+
+	// Returns softmax(last y,temp) as an array of doubles: like last p, but
+	// the probabilities of the next indices are normalized using a softmax
+	// with temperature = temp in (0.0,1.0].
+	double[] getProbabilities(double temp)
 	{
 		if (!initialized)
 			throw new IllegalStateException("Network was not initialized.");
 
-		if (n < 1)
-			throw new IllegalArgumentException();
-
-		int[] indices = new int[n];
-
-		Matrix h;
-		if (keep)
-			h = this.h;
-		else
-			h = new Matrix(this.h);
-
-		Matrix xAtt = Matrix.oneHot(inputSize, seedIndex);
-
-		for (int i = 0; i < n; ++i)
-		{
-			// calculate the next hidden state
-			h = (Matrix.dot(Wxh, xAtt).add(Matrix.dot(Whh, h)).add(bh)).tanh();
-
-			// calculate output
-			Matrix y = Matrix.dot(Why, h).add(by);
-
-			// calculate probabilities
-			Matrix p = Math.softmax(y);
-
-			// choose one of the outputs based on the probabilities
-			int ix = Random.randomChoice(p.unravel());
-			indices[i] = ix;
-
-			// use the chosen index as the new input
-			xAtt = Matrix.oneHot(inputSize, ix);
-		}
-
-		return indices;
+		return Math.softmax(new Matrix(yAt[yAt.length - 1]), temp).unravel();
 	}
 
 	// Save the hidden state before sampling.

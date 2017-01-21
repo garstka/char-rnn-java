@@ -12,6 +12,17 @@ public class Math
 		return java.lang.Math.abs(a - b) <= compareEpsilon;
 	}
 
+	public static boolean close(double a, double b, double eps)
+	{
+		return java.lang.Math.abs(a - b) <= eps;
+	}
+
+	// return the comparison epsilon
+	public static double eps()
+	{
+		return compareEpsilon;
+	}
+
 	/* Useful Matrix functions */
 
 	// Applies the softmax function with temperature = 1.0

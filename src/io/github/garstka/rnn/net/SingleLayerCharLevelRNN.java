@@ -64,28 +64,16 @@ public class SingleLayerCharLevelRNN extends CharLevelRNN
 
 	/*** Sample ***/
 
-	// Samples n indices, single seed, advance the state.
-	public int[] sampleIndices(int n, int seed)
-	{
-		return internal.sampleIndices(n, seed);
-	}
-
-	// Samples n indices, single seed, choose whether to advance the state.
-	public int[] sampleIndices(int n, int seed, boolean advance)
-	{
-		return internal.sampleIndices(n, seed, advance);
-	}
-
 	// Samples n indices, sequence seed, advance the state.
-	public int[] sampleIndices(int n, int[] seed)
+	public int[] sampleIndices(int n, int[] seed, double temp)
 	{
-		return internal.sampleIndices(n, seed);
+		return internal.sampleIndices(n, seed, temp);
 	}
 
 	// Samples n indices, sequence seed, choose whether to advance the state.
-	public int[] sampleIndices(int n, int[] seed, boolean advance)
+	public int[] sampleIndices(int n, int[] seed, double temp, boolean advance)
 	{
-		return internal.sampleIndices(n, seed, advance);
+		return internal.sampleIndices(n, seed, temp, advance);
 	}
 
 	/*** Get ***/

@@ -140,6 +140,20 @@ public class RNNTrainer
 			    "Step: " + totalSteps + ", loss: " + getSmoothLoss());
 	}
 
+	// Reset the data pointer to the beginning.
+	public void loopAround()
+	{
+		dataTrainedIndex = 0;
+	}
+
+	/*** Get ***/
+
+	// Returns the step count.
+	public int getTotalSteps()
+	{
+		return totalSteps;
+	}
+
 	// Returns the smooth cross-entropy loss.
 	public double getSmoothLoss()
 	{
@@ -148,6 +162,8 @@ public class RNNTrainer
 
 		return smoothLoss / sequenceLength * 100;
 	}
+
+	/*** Set ***/
 
 	// Print debug messages.
 	public void printDebug(boolean on)

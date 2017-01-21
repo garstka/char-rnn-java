@@ -1,5 +1,6 @@
 package io.github.garstka.rnn.net;
 
+import io.github.garstka.rnn.math.Math;
 import io.github.garstka.rnn.math.Matrix;
 import io.github.garstka.rnn.math.Random;
 
@@ -99,26 +100,14 @@ public class SingleLayerRNN extends RNN
 
 	/*** Sample ***/
 
-	// Samples n indices, single seed, advance the state.
-	public int[] sampleIndices(int n, int seed)
-	{
-		return sampleIndices(n, seed, true);
-	}
-
-	// Samples n indices, single seed, choose whether to advance the state.
-	public int[] sampleIndices(int n, int seed, boolean advance)
-	{
-		return sampleIndices(n, new int[] {seed}, advance);
-	}
-
 	// Samples n indices, sequence seed, advance the state.
-	public int[] sampleIndices(int n, int[] seed)
+	public int[] sampleIndices(int n, int[] seed, double temp)
 	{
-		return sampleIndices(n, seed, true);
+		return sampleIndices(n, seed, temp, true);
 	}
 
 	// Samples n indices, sequence seed, choose whether to advance the state.
-	public int[] sampleIndices(int n, int[] seed, boolean advance)
+	public int[] sampleIndices(int n, int[] seed, double temp, boolean advance)
 	{
 		if (!initialized)
 			throw new IllegalStateException("Network is uninitialized.");
@@ -138,13 +127,14 @@ public class SingleLayerRNN extends RNN
 
 		layer.forward(layer.ixTox(seed));
 		sampled[0] = Random.randomChoice(
-		    layer.getp()[1].unravel()); // first choice given seed
+		    layer.getProbabilities(temp)); // first choice given seed
+
 
 		Matrix seedVec = layer.ixTox(sampled[0]);
 		for (int t = 1; t < n; t++)
 		{
 			layer.forward(seedVec);
-			sampled[t] = Random.randomChoice(layer.getp()[1].unravel());
+			sampled[t] = Random.randomChoice(layer.getProbabilities(temp));
 			seedVec = layer.ixTox(sampled[t]);
 		}
 
