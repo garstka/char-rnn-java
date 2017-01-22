@@ -5,7 +5,7 @@ import io.github.garstka.rnn.math.Random;
 import io.github.garstka.rnn.math.Math;
 
 // Multi layer RNN.
-public class MultiLayerRNN extends RNN
+public class MultiLayerRNN extends BasicRNN
 {
 	// Layers
 

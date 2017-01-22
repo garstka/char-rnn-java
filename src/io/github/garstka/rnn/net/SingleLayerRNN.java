@@ -5,7 +5,7 @@ import io.github.garstka.rnn.math.Matrix;
 import io.github.garstka.rnn.math.Random;
 
 // Single layer RNN.
-public class SingleLayerRNN extends RNN
+public class SingleLayerRNN extends BasicRNN
 {
 	// The layer
 
