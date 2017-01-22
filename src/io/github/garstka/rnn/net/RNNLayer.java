@@ -4,10 +4,11 @@ import io.github.garstka.rnn.math.Math;
 import io.github.garstka.rnn.math.Matrix;
 import io.github.garstka.rnn.math.Random;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 // An RNN Layer with support for mult-layer networks.
-public class RNNLayer
+public class RNNLayer implements Serializable
 {
 	// Hyperparameters
 

@@ -3,13 +3,14 @@ package io.github.garstka.rnn.math;
 import io.github.garstka.rnn.math.exceptions.NotAVectorException;
 import io.github.garstka.rnn.math.exceptions.NotRectangularArrayException;
 
+import java.io.Serializable;
 import java.util.function.UnaryOperator;
 
 // MxN Matrix
 // If M=1 or N=1, the matrix is treated as a k-vector v.
 // v is equivalent to v.T() in scenarios like matrix multiplication,
 // or element-wise addition.
-public class Matrix
+public class Matrix implements Serializable
 {
 	private int M; // rows
 	private int N; // cols

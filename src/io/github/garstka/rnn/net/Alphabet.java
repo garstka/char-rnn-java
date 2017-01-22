@@ -2,11 +2,12 @@ package io.github.garstka.rnn.net;
 
 import io.github.garstka.rnn.net.exceptions.CharacterNotInAlphabetException;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.TreeSet;
 
 // Immutable set of symbols mapped indices.
-public class Alphabet
+public class Alphabet implements Serializable
 {
 	private char[] indexToChar;
 	private HashMap<Character, Integer> charToIndex;

@@ -3,8 +3,10 @@ package io.github.garstka.rnn.net;
 import io.github.garstka.rnn.net.interfaces.IntegerSampleable;
 import io.github.garstka.rnn.net.interfaces.Trainable;
 
+import java.io.Serializable;
+
 // A recurrent neural network.
-public abstract class RNN implements IntegerSampleable, Trainable
+public abstract class RNN implements IntegerSampleable, Trainable, Serializable
 {
 	/*** Get ***/
 

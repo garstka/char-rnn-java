@@ -10,19 +10,19 @@ public class Options
 	/*** Model parameters ***/
 
 	private int hiddenSize; // Size of a single RNN layer hidden state.
-	public static final int hiddenSizeDefault = 50;
+	static final int hiddenSizeDefault = 50;
 
 	private int layers; // How many layers in a net?
-	public static final int layersDefault = 2;
+	static final int layersDefault = 2;
 
 	/*** Training parameters ***/
 
 	private int sequenceLength; // How many steps to unroll during training?
-	public static final int sequenceLengthDefault = 50;
+	static final int sequenceLengthDefault = 50;
 
 
 	private double learningRate; // The network learning rate.
-	public static final double learningRateDefault = 0.1;
+	static final double learningRateDefault = 0.1;
 
 	/*** Sampling parameters ***/
 
@@ -30,21 +30,34 @@ public class Options
 	// temperature means more conservative
 	// predictions.
 	private double samplingTemp;
-	public static final double samplingTempDefault = 1.0;
+	static final double samplingTempDefault = 1.0;
 
 	/*** Other options ***/
 
 	private boolean printOptions; // Print options at the start.
-	public static final boolean printOptionsDefault = true;
+	static final boolean printOptionsDefault = true;
 
 	private int trainingSampleLength; // Length of a sample during training.
-	public static final int trainingSampleLengthDefault = 200;
+	static final int trainingSampleLengthDefault = 200;
+
+	private int
+	    snapshotEveryNSamples; // Take a network's snapshot every N samples.
+	static final int snapshotEveryNSamplesDefault = 50;
+
+	private int
+	    loopAroundTimes; // Loop around the training data this many times.
+	static final int loopAroundTimesDefault = 5;
+
+	private int
+	    sampleEveryNSteps; // Take a sample during training every N steps.
+	static final int sampleEveryNStepsDefault = 100;
 
 	private String inputFile; // The training data.
-	public static final String inputFileDefault = "input.txt";
+	static final String inputFileDefault = "input.txt";
 
 	private boolean useSingleLayerNet; // Use the simple, single layer net.
-	public static final boolean useSingleLayerNetDefault = false;
+	static final boolean useSingleLayerNetDefault = false;
+
 
 	/*** Load ***/
 
@@ -100,49 +113,64 @@ public class Options
 
 	/*** Get ***/
 
-	public int getHiddenSize()
+	int getHiddenSize()
 	{
 		return hiddenSize;
 	}
 
-	public int getLayers()
+	int getLayers()
 	{
 		return layers;
 	}
 
-	public int getSequenceLength()
+	int getSequenceLength()
 	{
 		return sequenceLength;
 	}
 
-	public double getLearningRate()
+	double getLearningRate()
 	{
 		return learningRate;
 	}
 
-	public double getSamplingTemp()
+	double getSamplingTemp()
 	{
 		return samplingTemp;
 	}
 
-	public boolean getPrintOptions()
+	boolean getPrintOptions()
 	{
 		return printOptions;
 	}
 
-	public String getInputFile()
+	String getInputFile()
 	{
 		return inputFile;
 	}
 
-	public boolean getUseSingleLayerNet()
+	boolean getUseSingleLayerNet()
 	{
 		return useSingleLayerNet;
 	}
 
-	public int getTrainingSampleLength()
+	int getTrainingSampleLength()
 	{
 		return trainingSampleLength;
+	}
+
+	int getLoopAroundTimes()
+	{
+		return loopAroundTimes;
+	}
+
+	int getSampleEveryNSteps()
+	{
+		return sampleEveryNSteps;
+	}
+
+	int getSnapshotEveryNSamples()
+	{
+		return snapshotEveryNSamples;
 	}
 
 	/*** Helper ***/
@@ -160,6 +188,9 @@ public class Options
 
 		printOptions = printOptionsDefault;
 		trainingSampleLength = trainingSampleLengthDefault;
+		loopAroundTimes = loopAroundTimesDefault;
+		sampleEveryNSteps = sampleEveryNStepsDefault;
+		snapshotEveryNSamples = snapshotEveryNSamplesDefault;
 		inputFile = inputFileDefault;
 		useSingleLayerNet = useSingleLayerNetDefault;
 	}
@@ -186,6 +217,29 @@ public class Options
 			sequenceLength = sequenceLengthDefault;
 			System.out.println("Sequence length must be >= 1. Using default "
 			    + Integer.toString(sequenceLength) + ".");
+		}
+
+		if (loopAroundTimes < 0)
+		{
+			loopAroundTimes = loopAroundTimesDefault;
+			System.out.println("Loop around times must be >= 0. Using default "
+			    + Integer.toString(loopAroundTimes) + ".");
+		}
+
+		if (sampleEveryNSteps < 1)
+		{
+			sampleEveryNSteps = sampleEveryNStepsDefault;
+			System.out.println(
+			    "Sample every N steps: N must be >= 1. Using default "
+			    + Integer.toString(sampleEveryNSteps) + ".");
+		}
+
+		if (snapshotEveryNSamples < 1)
+		{
+			snapshotEveryNSamples = snapshotEveryNSamplesDefault;
+			System.out.println(
+			    "Snapshot every N samples: N must be >= 1. Using default "
+			    + Integer.toString(snapshotEveryNSamples) + ".");
 		}
 
 		if (learningRate < 0.0)
@@ -224,6 +278,11 @@ public class Options
 		printOptions = parseBool("printOptions", printOptionsDefault);
 		trainingSampleLength =
 		    parseInt("trainingSampleLength", trainingSampleLengthDefault);
+		loopAroundTimes = parseInt("loopAroundTimes", loopAroundTimesDefault);
+		sampleEveryNSteps =
+		    parseInt("sampleEveryNSteps", sampleEveryNStepsDefault);
+		snapshotEveryNSamples =
+		    parseInt("snapshotEveryNSamples", snapshotEveryNSamplesDefault);
 		inputFile = prop.getProperty("inputFile");
 		useSingleLayerNet =
 		    parseBool("useSingleLayerNet", useSingleLayerNetDefault);
@@ -242,6 +301,11 @@ public class Options
 		prop.setProperty("printOptions", Boolean.toString(printOptions));
 		prop.setProperty(
 		    "trainingSampleLength", Integer.toString(trainingSampleLength));
+		prop.setProperty("loopAroundTimes", Integer.toString(loopAroundTimes));
+		prop.setProperty(
+		    "sampleEveryNSteps", Integer.toString(sampleEveryNSteps));
+		prop.setProperty(
+		    "snapshotEveryNSamples", Integer.toString(snapshotEveryNSamples));
 		prop.setProperty("inputFile", inputFile);
 		prop.setProperty(
 		    "useSingleLayerNet", Boolean.toString(useSingleLayerNet));

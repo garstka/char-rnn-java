@@ -5,6 +5,8 @@ import io.github.garstka.rnn.net.exceptions.NoMoreTrainingDataException;
 import io.github.garstka.rnn.net.interfaces.Trainable;
 import io.github.garstka.rnn.net.interfaces.TrainingSet;
 
+import java.io.Serializable;
+
 // Trains a recurrent neural net on a training set.
 public class RNNTrainer
 {

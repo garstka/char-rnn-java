@@ -48,7 +48,7 @@ public class StringTrainingSet implements TrainingSet
 		return new StringTrainingSet(data);
 	}
 
-	/* Main */
+	/* DemoRNN functionality */
 
 	// Extracts out.length indices starting at index.
 	// ix - input sequence
