@@ -29,11 +29,10 @@ I tested it mainly on the full Shakespeare dataset (4.6MB).
  - Still, I like that for a simple model it does quite well. Sometimes it manages to capture the way of speaking
  of Shakespeare's characters, using very few actual words. Some of the generated names are also pretty elaborate.
 
-
-    LIMON SLUMENLUN SENCENSO:
-    Yee, take mece it a dold's make a slave
-    And thing, bear, I may pleast
-    Why in dulow witn ming!
+> LIMON SLUMENLUN SENCENSO:<br>
+> Yee, take mece it a dold's make a slave<br>
+> And thing, bear, I may pleast<br>
+> Why in dulow witn ming!
 
 ## License
 Copyright (c) 2017 Matt Garstka, MIT License
