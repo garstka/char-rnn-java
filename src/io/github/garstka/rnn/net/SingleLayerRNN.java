@@ -1,6 +1,5 @@
 package io.github.garstka.rnn.net;
 
-import io.github.garstka.rnn.math.Math;
 import io.github.garstka.rnn.math.Matrix;
 import io.github.garstka.rnn.math.Random;
 
@@ -11,7 +10,7 @@ public class SingleLayerRNN extends BasicRNN
 
 	protected RNNLayer layer; // The single RNN layer
 
-	protected boolean initialized;
+	private boolean initialized;
 
 	/*** Construct ***/
 

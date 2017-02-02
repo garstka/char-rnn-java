@@ -18,20 +18,20 @@ public class RNNTrainer
 
 	// Training
 
-	protected int
+	private int
 	    sequenceLength; // Steps to unroll the RNN for during training.
 
-	protected TrainingSet trainingSet; // The training set.
-	protected int dataTrainedIndex; // Current index into training data.
+	private TrainingSet trainingSet; // The training set.
+	private int dataTrainedIndex; // Current index into training data.
 
-	protected int[] ix; // Training sequence inputs by time.
-	protected int[] iy; // Training sequence inputs by time.
-	protected double smoothLoss; // Loss for training evaluation.
-	protected int totalSteps; // Total step count.
+	private int[] ix; // Training sequence inputs by time.
+	private int[] iy; // Training sequence inputs by time.
+	private double smoothLoss; // Loss for training evaluation.
+	private int totalSteps; // Total step count.
 
-	protected boolean debugMessagesOn;
+	private boolean debugMessagesOn;
 
-	protected boolean initialized;
+	private boolean initialized;
 
 	/*** Construct ***/
 

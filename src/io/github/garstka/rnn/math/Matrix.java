@@ -360,7 +360,7 @@ public class Matrix implements Serializable
 	{
 		for (double[] row : data)
 			for (int j = 0; j < N; j++)
-				row[j] = f.apply(new Double(row[j])).doubleValue();
+				row[j] = f.apply(row[j]).doubleValue();
 		return this;
 	}
 
@@ -428,7 +428,9 @@ public class Matrix implements Serializable
 			for (int j = 0; j < N; j++)
 			{
 				if (Math.close(data[i][j], 0.0)) // ignore zeros
-					continue;
+				{
+					// continue
+				}
 				else if (Math.close(data[i][j], 1.0)) // allow a single one
 				{
 					if (one_already_encountered)

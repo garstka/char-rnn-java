@@ -8,7 +8,7 @@ import io.github.garstka.rnn.net.exceptions.NoMoreTrainingDataException;
 import java.io.*;
 import java.util.Scanner;
 
-public class DemoRNN
+public class CharRNN
 {
 
 	public static void main(String[] args)
@@ -44,11 +44,14 @@ public class DemoRNN
 			System.out.println("Choose an action:");
 			System.out.println(
 			    "1. Create a new network and start training it.");
+			System.out.println("2. Restore a snapshot and continue training.");
 			System.out.println(
-			    "2. Restore a snapshot and continue training it.");
-			System.out.println(
-			    "3. Restore a snapshot and sample it (generate text).");
+			    "3. Restore a snapshot and sample (generate text).");
 			System.out.println("(anything else to quit)");
+
+			final int optionCreate = 1;
+			final int optionContinue = 2;
+			final int optionSample = 3;
 
 			try
 			{
@@ -56,13 +59,14 @@ public class DemoRNN
 				String networkName = null;
 
 				int nextChar = Integer.parseInt(scanner.nextLine());
-				if (nextChar == 1) // Create a new network
+				if (nextChar == optionCreate) // Create a new network
 				{
 					System.out.println("New network name: ");
 					networkName = scanner.nextLine();
 					net = initialize(options);
 				}
-				else if (nextChar == 2 || nextChar == 3) // From snapshot
+				else if (nextChar == optionContinue
+				    || nextChar == optionSample) // From snapshot
 				{
 					System.out.println(".snapshot file name: ");
 					networkName = scanner.nextLine();
@@ -81,7 +85,8 @@ public class DemoRNN
 					break;
 				}
 
-				if (nextChar == 1 || nextChar == 2) // train
+				if (nextChar == optionCreate
+				    || nextChar == optionContinue) // train
 					train(options, net, networkName);
 				else // sample
 				{
@@ -113,7 +118,6 @@ public class DemoRNN
 		}
 	}
 
-
 	// Initialize a network for training.
 	private static CharLevelRNN initialize(Options options)
 	{
@@ -140,12 +144,18 @@ public class DemoRNN
 		}
 	}
 
-	// Train the network.
+	// Trains the network.
 	private static void train(
 	    Options options, CharLevelRNN net, String snapshotName)
 	{
-		if (options == null || net == null || snapshotName == null)
-			throw new IllegalArgumentException("Params can't be null.");
+		if (options == null)
+			throw new NullPointerException("Options can't be null.");
+
+		if (net == null)
+			throw new NullPointerException("Network can't be null.");
+
+		if (snapshotName == null)
+			throw new NullPointerException("Snapshot name can't be null.");
 
 		try
 		{
@@ -211,11 +221,11 @@ public class DemoRNN
 
 				saveASnapshot(snapshotName + "-" + (nextSnapshotNumber++), net);
 
-				if (--loopTimes < 0)
+				if (loopTimes <= 0)
 					break;
 
 				System.out.println(
-				    "Looping around " + (loopTimes + 1) + "more time(s).");
+				    "Looping around " + (loopTimes--) + "more time(s).");
 
 				trainer.loopAround();
 			}
@@ -230,17 +240,19 @@ public class DemoRNN
 		}
 		catch (CharacterNotInAlphabetException e)
 		{
-			// Shouldn't happen.
-			throw new RuntimeException(
-			    "Different alphabet - can't train on this dataset.", e);
+			System.out.println(
+			    "Different alphabet - can't train on this dataset.");
 		}
 	}
 
-	// Save a network snapshot with this name to file.
+	// Saves a network snapshot with this name to file.
 	private static void saveASnapshot(String name, CharLevelRNN net)
 	{
-		if (name == null || net == null || !net.isInitialized())
-			throw new IllegalArgumentException();
+		if (name == null)
+			throw new NullPointerException("Network name can't be null.");
+
+		if (net == null)
+			throw new NullPointerException("Network can't be null.");
 
 		// Take a snapshot
 		try (FileOutputStream str = new FileOutputStream(name + ".snapshot"))
@@ -257,15 +269,15 @@ public class DemoRNN
 		System.out.println("Saved as " + name + ".snapshot");
 	}
 
-	// Load a network snapshot with this name from file.
+	// Loads a network snapshot with this name from file.
 	private static CharLevelRNN loadASnapshot(String name) throws IOException
 	{
 		if (name == null)
-			throw new IllegalArgumentException();
+			throw new NullPointerException("Name can't be null.");
 
 		CharLevelRNN net = null;
 
-		// Take a snapshot
+		// Load the snapshot
 		try (FileInputStream str = new FileInputStream(name + ".snapshot"))
 		{
 			ObjectInputStream ostr = new ObjectInputStream(str);
@@ -280,12 +292,28 @@ public class DemoRNN
 	}
 
 
-	// Just samples the net for n characters.
+	/*
+	    Samples the net for n characters and prints the result.
+	    Requirements:
+	     - n >= 1,
+	     - seed != null
+	     - net != null, must be initialized
+	     - temperature in (0.0,1.0]
+	 */
 	private static void sample(
 	    int n, String seed, double temperature, CharLevelRNN net)
 	{
-		if (n < 1 || net == null || !net.isInitialized())
-			throw new IllegalArgumentException();
+		if (n < 1)
+			throw new IllegalArgumentException("n must be at least 1");
+
+		if (net == null)
+			throw new NullPointerException("Network can't be null.");
+
+		if (seed == null)
+			throw new NullPointerException("Seed can't be null.");
+
+		if (!net.isInitialized())
+			throw new IllegalArgumentException("Network must be initialized.");
 
 		try
 		{

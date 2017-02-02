@@ -19,13 +19,13 @@ public class Alphabet implements Serializable
 		if (data == null)
 		{
 			indexToChar = new char[0];
-			charToIndex = new HashMap<Character, Integer>();
+			charToIndex = new HashMap<>();
 			return;
 		}
 
 		// find the alphabet
-		TreeSet<Character> chars = new TreeSet<Character>();
-		charToIndex = new HashMap<Character, Integer>();
+		TreeSet<Character> chars = new TreeSet<>();
+		charToIndex = new HashMap<>();
 
 		for (int i = 0; i < data.length(); i++)
 			chars.add(data.charAt(i));

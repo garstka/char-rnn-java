@@ -20,7 +20,7 @@ public class StringTrainingSet implements TrainingSet
 	private StringTrainingSet(String data)
 	{
 		if (data == null)
-			data = new String();
+			data = "";
 
 		this.data = data;
 		this.alphabet = Alphabet.fromString(data);
@@ -28,8 +28,8 @@ public class StringTrainingSet implements TrainingSet
 
 	/* Create */
 
-	// Returns a training set with data from file (UTF-8). Requires fileName !=
-	// null.
+	// Returns a training set with data from file (UTF-8).
+	// Requires fileName != null.
 	public static StringTrainingSet fromFile(String fileName) throws IOException
 	{
 		if (fileName == null)
@@ -48,7 +48,7 @@ public class StringTrainingSet implements TrainingSet
 		return new StringTrainingSet(data);
 	}
 
-	/* DemoRNN functionality */
+	/* Main functionality */
 
 	// Extracts out.length indices starting at index.
 	// ix - input sequence

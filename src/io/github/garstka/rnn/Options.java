@@ -10,7 +10,7 @@ public class Options
 	/*** Model parameters ***/
 
 	private int hiddenSize; // Size of a single RNN layer hidden state.
-	static final int hiddenSizeDefault = 50;
+	static final int hiddenSizeDefault = 100;
 
 	private int layers; // How many layers in a net?
 	static final int layersDefault = 2;
@@ -19,7 +19,6 @@ public class Options
 
 	private int sequenceLength; // How many steps to unroll during training?
 	static final int sequenceLengthDefault = 50;
-
 
 	private double learningRate; // The network learning rate.
 	static final double learningRateDefault = 0.1;
@@ -38,7 +37,7 @@ public class Options
 	static final boolean printOptionsDefault = true;
 
 	private int trainingSampleLength; // Length of a sample during training.
-	static final int trainingSampleLengthDefault = 200;
+	static final int trainingSampleLengthDefault = 400;
 
 	private int
 	    snapshotEveryNSamples; // Take a network's snapshot every N samples.
@@ -46,7 +45,7 @@ public class Options
 
 	private int
 	    loopAroundTimes; // Loop around the training data this many times.
-	static final int loopAroundTimesDefault = 5;
+	static final int loopAroundTimesDefault = 0;
 
 	private int
 	    sampleEveryNSteps; // Take a sample during training every N steps.
@@ -198,26 +197,48 @@ public class Options
 	// Validates the properties and sets to default values where failed.
 	private void validateProperties()
 	{
+		validateHiddenSize();
+		validateLayers();
+		validateSequenceLength();
+		validateLoopAroundTimes();
+		validateSampleEveryNSteps();
+		validateSnapshotEveryNSamples();
+		validateLearningRate();
+		validateSamplingTemp();
+		validateTrainingSampleLength();
+	}
+
+	private void validateHiddenSize()
+	{
 		if (hiddenSize < 1)
 		{
 			hiddenSize = hiddenSizeDefault;
 			System.out.println("Hidden size must be >= 1. Using default "
 			    + Integer.toString(hiddenSize) + ".");
 		}
+	}
 
+	private void validateLayers()
+	{
 		if (layers < 1)
 		{
 			layers = layersDefault;
 			System.out.println("Layer count must be >= 1. Using default "
 			    + Integer.toString(layers) + ".");
 		}
-
+	}
+	private void validateSequenceLength()
+	{
 		if (sequenceLength < 1)
 		{
 			sequenceLength = sequenceLengthDefault;
 			System.out.println("Sequence length must be >= 1. Using default "
 			    + Integer.toString(sequenceLength) + ".");
 		}
+	}
+
+	private void validateLoopAroundTimes()
+	{
 
 		if (loopAroundTimes < 0)
 		{
@@ -225,7 +246,10 @@ public class Options
 			System.out.println("Loop around times must be >= 0. Using default "
 			    + Integer.toString(loopAroundTimes) + ".");
 		}
+	}
 
+	private void validateSampleEveryNSteps()
+	{
 		if (sampleEveryNSteps < 1)
 		{
 			sampleEveryNSteps = sampleEveryNStepsDefault;
@@ -233,7 +257,10 @@ public class Options
 			    "Sample every N steps: N must be >= 1. Using default "
 			    + Integer.toString(sampleEveryNSteps) + ".");
 		}
+	}
 
+	private void validateSnapshotEveryNSamples()
+	{
 		if (snapshotEveryNSamples < 1)
 		{
 			snapshotEveryNSamples = snapshotEveryNSamplesDefault;
@@ -241,14 +268,20 @@ public class Options
 			    "Snapshot every N samples: N must be >= 1. Using default "
 			    + Integer.toString(snapshotEveryNSamples) + ".");
 		}
+	}
 
+	private void validateLearningRate()
+	{
 		if (learningRate < 0.0)
 		{
 			learningRate = learningRateDefault;
 			System.out.println("Learning rate must be >= 0. Using default "
 			    + Double.toString(learningRate) + ".");
 		}
+	}
 
+	private void validateSamplingTemp()
+	{
 		if (Math.close(samplingTemp, 0.0) || samplingTemp < 0.0
 		    || samplingTemp > 1.0 + Math.eps())
 		{
@@ -257,7 +290,10 @@ public class Options
 			    "Learning rate must be in (0.0,1.0]. Using default "
 			    + Double.toString(learningRate) + ".");
 		}
+	}
 
+	private void validateTrainingSampleLength()
+	{
 		if (trainingSampleLength < 1)
 		{
 			trainingSampleLength = trainingSampleLengthDefault;

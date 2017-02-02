@@ -3,7 +3,7 @@ package io.github.garstka.rnn.math;
 // Math helper functions
 public class Math
 {
-	public static double compareEpsilon = 1E-6;
+	public static final double compareEpsilon = 1E-6;
 
 	/* Double epsilon compare*/
 

@@ -4,7 +4,7 @@ import io.github.garstka.rnn.math.exceptions.NotRectangularArrayException;
 
 import java.util.Arrays;
 
-// Utility helper funtions.
+// Utility functions.
 public class Utils
 {
 	/* Utilities for 2D arrays. */
@@ -23,8 +23,8 @@ public class Utils
 		return dst;
 	}
 
-	// Returns the row count of a 2D array of doubles. Treats null as size-0
-	// array.
+	// Returns the row count of a 2D array of doubles.
+	// Treats null as size-0 array.
 	static public int arrayRows(double[][] array)
 	{
 		if (array == null)
