@@ -10,7 +10,6 @@ import java.util.Scanner;
 
 public class CharRNN
 {
-
 	public static void main(String[] args)
 	{
 		String configFile = "config.properties";

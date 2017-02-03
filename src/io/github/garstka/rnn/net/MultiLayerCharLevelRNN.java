@@ -15,7 +15,8 @@ public class MultiLayerCharLevelRNN extends CharLevelRNN
 		internal = new MultiLayerRNN();
 	}
 
-	// Constructs and initializes immediately. Requires that alphabet != null.
+	// Constructs and initializes immediately.
+	// Requires that alphabet != null.
 	public MultiLayerCharLevelRNN(Alphabet alphabet)
 	{
 		this();

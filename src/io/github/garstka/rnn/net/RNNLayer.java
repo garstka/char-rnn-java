@@ -7,7 +7,7 @@ import io.github.garstka.rnn.math.Random;
 import java.io.Serializable;
 import java.util.Arrays;
 
-// An RNN Layer with support for mult-layer networks.
+// An RNN Layer with support for multi-layer networks.
 public class RNNLayer implements Serializable
 {
 	// Hyperparameters
@@ -53,7 +53,8 @@ public class RNNLayer implements Serializable
 	private Matrix[] dxAt; // output gradient from a backwards pass
 
 	private int lastSequenceLength; // Number of steps in the last forward pass
-	// (must match the steps for the backward pass)
+	                                // (must match the steps for the backward
+	                                // pass)
 
 	private boolean initialized;
 
@@ -360,8 +361,6 @@ public class RNNLayer implements Serializable
 		return dyAt;
 	}
 
-
-
 	/*
 	    Training backward pass.
 
@@ -375,8 +374,6 @@ public class RNNLayer implements Serializable
 	*/
 	void backward(Matrix dy[])
 	{
-		// System.out.println("LAYER");
-		// System.out.println("" + dy[1].getk());
 		if (!initialized)
 			throw new IllegalStateException("Network was not initialized.");
 
@@ -430,21 +427,7 @@ public class RNNLayer implements Serializable
 			dhNext = Matrix.dot(Whh.T(), dhRaw);
 
 			// multi-layer only - save dx
-			if (t == 5)
-			{
-				// dxAt[t] = Matrix.dot(Wxh.T(), dhRaw);
-				// System.out.println("dhRaw: " +
-				// Arrays.toString(dxAt[t].unravel()));
-				// dxAt[t] = Matrix.dot(Wxh.T(), dh);
-				// System.out.println("dh: " +
-				// Arrays.toString(dxAt[t].unravel()));
-			}
 			dxAt[t] = Matrix.dot(Wxh.T(), dh);
-			// System.out.println("dh: " + dh.getM() + " " + dh.getN());
-			// System.out.println("dhRaw: " + dhRaw.getM() + " " +
-			// dhRaw.getN());
-			// System.out.println("dxAt[t]: " + dxAt[t].getM() + " " +
-			// dxAt[t].getN());
 		}
 
 		// clip exploding gradients

@@ -5,7 +5,7 @@ public class Math
 {
 	public static final double compareEpsilon = 1E-6;
 
-	/* Double epsilon compare*/
+	/* Double epsilon compare */
 
 	public static boolean close(double a, double b)
 	{

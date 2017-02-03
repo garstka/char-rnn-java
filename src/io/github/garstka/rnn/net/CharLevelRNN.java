@@ -43,6 +43,7 @@ public abstract class CharLevelRNN extends RNN implements CharacterSampleable
 
 		int[] sampledIndices =
 		    sampleIndices(length, seedIndices, temp, advance);
+
 		char[] sampledChars = getAlphabet().indicesToChars(sampledIndices);
 
 		return new String(sampledChars);

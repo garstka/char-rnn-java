@@ -14,6 +14,7 @@ public class SingleLayerCharLevelRNN extends CharLevelRNN
 	{
 		internal = new SingleLayerRNN();
 	}
+
 	// Constructs and initializes immediately. Requires that alphabet != null.
 	public SingleLayerCharLevelRNN(Alphabet alphabet)
 	{

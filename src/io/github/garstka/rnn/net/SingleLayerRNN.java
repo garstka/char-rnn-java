@@ -47,8 +47,8 @@ public class SingleLayerRNN extends BasicRNN
 
 	/*** Initialize ***/
 
-	// Initializes the net for this vocabulary size. Requires vocabularySize >
-	// 0.
+	// Initializes the net for this vocabulary size.
+	// Requires vocabularySize > 0.
 	public void initialize(int vocabularySize)
 	{
 		if (vocabularySize < 1)
@@ -139,8 +139,6 @@ public class SingleLayerRNN extends BasicRNN
 
 		if (!advance)
 			layer.restoreHiddenState(savedState);
-
-		// int[] sampled = layer.sample(n,seed[0]);
 
 		return sampled;
 	}

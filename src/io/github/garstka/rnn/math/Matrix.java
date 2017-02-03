@@ -160,7 +160,6 @@ public class Matrix implements Serializable
 		// System.out.println("a: " + a.M + "x" + a.N + "b:" + b.M + "x" + b.N);
 		if (a.N != b.M) // if dimensions are not compatible
 		{
-
 			if (a.N == 1 && b.N == 1) // if both are vectors
 			{
 				// b^T is compatible (an outer product)
@@ -414,8 +413,8 @@ public class Matrix implements Serializable
 		return M == 1 || N == 1;
 	}
 
-	// Returns the index with the value 1.0. Requires the matrix to be a one-hot
-	// vector.
+	// Returns the index with the value 1.0.
+	// Requires the matrix to be a one-hot vector.
 	public int oneHotIndex()
 	{
 		if (!(M == 1 || N == 1))
@@ -540,8 +539,8 @@ public class Matrix implements Serializable
 		data[i][j] = x;
 	}
 
-	// Sets the vector element at m.oneHotIndex() to x. Requires index to be a
-	// one-hot vector, and its index i < k.
+	// Sets the vector element at m.oneHotIndex() to x.
+	// Requires index to be a one-hot vector, and its index i < k.
 	public void setAt(Matrix m, double x)
 	{
 		setAt(m.oneHotIndex(), x);
